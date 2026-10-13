@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrillAI Practice Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a365d;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .question-block {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .question-block:hover {
+            border-color: #4299e1;
+        }
+
+        .question-block.correct {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .question-block.incorrect {
+            border-color: #fc8181;
+            background: #fff5f5;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #4299e1;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 12px;
+        }
+
+        .question-category {
+            display: inline-block;
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 12px 0 16px 0;
+            color: #2d3748;
+        }
+
+        .options {
+            list-style: none;
+        }
+
+        .options li {
+            margin-bottom: 8px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .options label:hover {
+            background: #ebf8ff;
+            border-color: #4299e1;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #4299e1;
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+            color: #4a5568;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background: #fed7d7;
+            color: #9b2c2c;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 12px;
+        }
+
+        .btn-submit:hover {
+            background: #3182ce;
+        }
+
+        .btn-submit:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 32px;
+            text-align: center;
+            padding: 32px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .results-section.visible {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 64px;
+            font-weight: 800;
+            color: #2d3748;
+            margin: 16px 0;
+        }
+
+        .score-display.perfect {
+            color: #48bb78;
+        }
+
+        .score-display.good {
+            color: #4299e1;
+        }
+
+        .score-display.needs-work {
+            color: #ed8936;
+        }
+
+        .score-display.poor {
+            color: #fc8181;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #718096;
+            margin-bottom: 8px;
+        }
+
+        .score-message {
+            font-size: 16px;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+
+        .btn-reset {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #38a169;
+        }
+
+        .answer-key {
+            display: none;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .answer-key.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 DrillAI Practice Test</h1>
+        <p class="subtitle">5 Soal Latihan &mdash; Matematika, IPA, Bahasa Indonesia</p>
+
+        <form id="quizForm">
+
+            <!-- Question 1: Math -->
+            <div class="question-block" id="q1-block">
+                <span class="question-number">1</span>
+                <span class="question-category">Matematika</span>
+                <p class="question-text">Berapakah hasil dari 15 × 12?</p>
+                <ul class="options">
+                    <li>
+                        <label>
+                            <input type="radio" name="q1" value="A">
+                            <span class="option-letter">A</span> 160
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q1" value="B">
+                            <span class="option-letter">B</span> 180
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q1" value="C">
+                            <span class="option-letter">C</span> 170
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q1" value="D">
+                            <span class="option-letter">D</span> 150
+                        </label>
+                    </li>
+                </ul>
+                <div class="feedback" id="q1-feedback"></div>
+            </div>
+
+            <!-- Question 2: Science -->
+            <div class="question-block" id="q2-block">
+                <span class="question-number">2</span>
+                <span class="question-category">IPA</span>
+                <p class="question-text">Planet manakah yang paling dekat dengan Matahari?</p>
+                <ul class="options">
+                    <li>
+                        <label>
+                            <input type="radio" name="q2" value="A">
+                            <span class="option-letter">A</span> Venus
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q2" value="B">
+                            <span class="option-letter">B</span> Mars
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q2" value="C">
+                            <span class="option-letter">C</span> Merkurius
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q2" value="D">
+                            <span class="option-letter">D</span> Bumi
+                        </label>
+                    </li>
+                </ul>
+                <div class="feedback" id="q2-feedback"></div>
+            </div>
+
+            <!-- Question 3: Indonesian Language -->
+            <div class="question-block" id="q3-block">
+                <span class="question-number">3</span>
+                <span class="question-category">Bahasa Indonesia</span>
+                <p class="question-text">Sinonim dari kata "pandai" adalah...</p>
+                <ul class="options">
+                    <li>
+                        <label>
+                            <input type="radio" name="q3" value="A">
+                            <span class="option-letter">A</span> Bodoh
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q3" value="B">
+                            <span class="option-letter">B</span> Cerdas
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q3" value="C">
+                            <span class="option-letter">C</span> Lambat
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q3" value="D">
+                            <span class="option-letter">D</span> Malas
+                        </label>
+                    </li>
+                </ul>
+                <div class="feedback" id="q3-feedback"></div>
+            </div>
+
+            <!-- Question 4: Math -->
+            <div class="question-block" id="q4-block">
+                <span class="question-number">4</span>
+                <span class="question-category">Matematika</span>
+                <p class="question-text">Jika sebuah segitiga memiliki alas 10 cm dan tinggi 8 cm, berapakah luasnya?</p>
+                <ul class="options">
+                    <li>
+                        <label>
+                            <input type="radio" name="q4" value="A">
+                            <span class="option-letter">A</span> 80 cm²
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q4" value="B">
+                            <span class="option-letter">B</span> 40 cm²
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q4" value="C">
+                            <span class="option-letter">C</span> 18 cm²
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q4" value="D">
+                            <span class="option-letter">D</span> 60 cm²
+                        </label>
+                    </li>
+                </ul>
+                <div class="feedback" id="q4-feedback"></div>
+            </div>
+
+            <!-- Question 5: Science -->
+            <div class="question-block" id="q5-block">
+                <span class="question-number">5</span>
+                <span class="question-category">IPA</span>
+                <p class="question-text">Apa rumus kimia untuk air?</p>
+                <ul class="options">
+                    <li>
+                        <label>
+                            <input type="radio" name="q5" value="A">
+                            <span class="option-letter">A</span> CO₂
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q5" value="B">
+                            <span class="option-letter">B</span> H₂O
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q5" value="C">
+                            <span class="option-letter">C</span> NaCl
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="q5" value="D">
+                            <span class="option-letter">D</span> O₂
+                        </label>
+                    </li>
+                </ul>
+                <div class="feedback" id="q5-feedback"></div>
+            </div>
+
+            <button type="button" class="btn-submit" id="submitBtn" onclick="submitQuiz()">
+                Kirim Jawaban
+            </button>
+        </form>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <p class="score-label">Skor Anda</p>
+            <div class="score-display" id="scoreDisplay"></div>
+            <p class="score-message" id="scoreMessage"></p>
+            <button type="button" class="btn-reset" onclick="resetQuiz()">Coba Lagi</button>
+        </div>
+
+        <!-- Hidden answer key for DrillAI verification -->
+        <!-- ANSWER KEY: Q1=B, Q2=C, Q3=B, Q4=B, Q5=B -->
+    </div>
+
+    <script>
+        // Answer key
+        const ANSWERS = {
+            q1: 'B',  // 15 × 12 = 180
+            q2: 'C',  // Mercury is closest to the Sun
+            q3: 'B',  // "Cerdas" is synonym of "Pandai"
+            q4: 'B',  // Triangle area = ½ × 10 × 8 = 40 cm²
+            q5: 'B'   // Water = H₂O
+        };
+
+        const EXPLANATIONS = {
+            q1: 'Jawaban benar: B (180). 15 × 12 = 180.',
+            q2: 'Jawaban benar: C (Merkurius). Merkurius adalah planet terdekat dari Matahari.',
+            q3: 'Jawaban benar: B (Cerdas). "Cerdas" merupakan sinonim dari "pandai".',
+            q4: 'Jawaban benar: B (40 cm²). Luas segitiga = ½ × alas × tinggi = ½ × 10 × 8 = 40 cm².',
+            q5: 'Jawaban benar: B (H₂O). Rumus kimia air adalah H₂O (2 atom hidrogen dan 1 atom oksigen).'
+        };
+
+        function submitQuiz() {
+            let score = 0;
+            const totalQuestions = 5;
+            let allAnswered = true;
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = 'q' + i;
+                const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+                const block = document.getElementById(`${questionName}-block`);
+                const feedback = document.getElementById(`${questionName}-feedback`);
+
+                if (!selected) {
+                    allAnswered = false;
+                    block.style.borderColor = '#ed8936';
+                    feedback.textContent = '⚠️ Silakan pilih jawaban!';
+                    feedback.className = 'feedback incorrect';
+                    continue;
+                }
+
+                const isCorrect = selected.value === ANSWERS[questionName];
+
+                if (isCorrect) {
+                    score++;
+                    block.className = 'question-block correct';
+                    feedback.textContent = '✅ Benar! ' + EXPLANATIONS[questionName];
+                    feedback.className = 'feedback correct';
+                } else {
+                    block.className = 'question-block incorrect';
+                    feedback.textContent = '❌ Salah. ' + EXPLANATIONS[questionName];
+                    feedback.className = 'feedback incorrect';
+                }
+            }
+
+            if (!allAnswered) {
+                return;
+            }
+
+            // Disable submit button
+            document.getElementById('submitBtn').disabled = true;
+
+            // Disable all radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+                radio.disabled = true;
+            });
+
+            // Show results
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.textContent = score + ' / ' + totalQuestions + ' (' + percentage + '%)';
+
+            // Color based on score
+            if (percentage === 100) {
+                scoreDisplay.className = 'score-display perfect';
+                document.getElementById('scoreMessage').textContent = '🎉 Sempurna! Luar biasa!';
+            } else if (percentage >= 60) {
+                scoreDisplay.className = 'score-display good';
+                document.getElementById('scoreMessage').textContent = '👍 Bagus! Terus berlatih!';
+            } else if (percentage >= 40) {
+                scoreDisplay.className = 'score-display needs-work';
+                document.getElementById('scoreMessage').textContent = '📚 Perlu belajar lagi. Semangat!';
+            } else {
+                scoreDisplay.className = 'score-display poor';
+                document.getElementById('scoreMessage').textContent = '💪 Jangan menyerah! Coba lagi!';
+            }
+
+            document.getElementById('resultsSection').className = 'results-section visible';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            // Reset all radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+                radio.checked = false;
+                radio.disabled = false;
+            });
+
+            // Reset question blocks
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('q' + i + '-block').className = 'question-block';
+                document.getElementById('q' + i + '-feedback').className = 'feedback';
+                document.getElementById('q' + i + '-feedback').textContent = '';
+            }
+
+            // Reset submit button
+            document.getElementById('submitBtn').disabled = false;
+
+            // Hide results
+            document.getElementById('resultsSection').className = 'results-section';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

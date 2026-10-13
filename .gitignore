@@ -1,0 +1,44 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# DrillAI
+logs/*.log
+!logs/.gitkeep
+results/*.db
+!results/.gitkeep
+*.png
+*.jpg
+*.jpeg
+temp_screenshots/
+
+# PyInstaller
+*.spec
+dist/
+build/
