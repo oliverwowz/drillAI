@@ -1,4 +1,4 @@
-# DrillAI — Fullscreen AI Desktop Automation for Windows
+# DrillAI — Headless self-asnwer Exam Agents
 
 DrillAI adalah aplikasi baris perintah (*command-line interface*) Windows yang ringan dan efisien. Aplikasi ini menangkap tangkapan layar desktop (*fullscreen* atau *Region of Interest*), mendeteksi perubahan visual yang signifikan secara otomatis, lalu mengirimkan gambar ke Gemini AI melalui Google AI Studio API untuk menganalisis dan menjawab soal latihan, rumus matematika, diagram, dan tabel yang tampil di layar secara terstruktur.
 
